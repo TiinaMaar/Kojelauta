@@ -1,6 +1,6 @@
 # -*- coding: latin-1 -*-
 #!/usr/bin/python
-#connector tarvitaan pythoniin, jotta toimii! 
+#connector tarvitaan pythoniin, jotta toimii -alla 
 # sudo apt install python3-pip
 # pip install mysqlclient
 import mysql.connector as mariadb
