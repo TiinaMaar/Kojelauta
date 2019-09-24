@@ -115,8 +115,8 @@ ALTER TABLE Poissaolo ADD CONSTRAINT RefOppilaat10
 
 
 insert into O_ryhma values (1, 'eliitti', 'no@example.com', NULL);
-insert into O_ryhma values (2, 'pohjasakka', no@example.com', NULL);
-insert into O_ryhma values (3, 'te-keskuksen ryhma', no@example.com', NULL);
+insert into O_ryhma values (2, 'pohjasakka', 'no@example.com', NULL);
+insert into O_ryhma values (3, 'te-keskuksen ryhma', 'no@example.com', NULL);
 insert into Oppilaat values (1, 'Tiina', 'M', 1);
 insert into Oppilaat values (2, 'Gleb', 'T', 1);
 insert into Oppilaat values (3, 'Ville', 'A', 2);
