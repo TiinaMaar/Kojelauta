@@ -15,6 +15,7 @@ use tballs;
 CREATE TABLE O_ryhma(
     o_ryhmaID        INT    NOT NULL,
     nimi             VARCHAR(50),
+    vetaja_email     VARCHAR(50),             
     lukujarjestys    VARCHAR(50),
     CONSTRAINT PK1 PRIMARY KEY (o_ryhmaID)
 )
@@ -113,9 +114,9 @@ ALTER TABLE Poissaolo ADD CONSTRAINT RefOppilaat10
 ;
 
 
-insert into O_ryhma values (1, 'eliitti', NULL);
-insert into O_ryhma values (2, 'pohjasakka', NULL);
-insert into O_ryhma values (3, 'te-keskuksen ryhma', NULL);
+insert into O_ryhma values (1, 'eliitti', 'no@example.com', NULL);
+insert into O_ryhma values (2, 'pohjasakka', no@example.com', NULL);
+insert into O_ryhma values (3, 'te-keskuksen ryhma', no@example.com', NULL);
 insert into Oppilaat values (1, 'Tiina', 'M', 1);
 insert into Oppilaat values (2, 'Gleb', 'T', 1);
 insert into Oppilaat values (3, 'Ville', 'A', 2);
