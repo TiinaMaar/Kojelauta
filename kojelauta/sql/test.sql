@@ -15,7 +15,7 @@ use tballs;
 CREATE TABLE O_ryhma(
     o_ryhmaID        INT    NOT NULL,
     nimi             VARCHAR(50),
-    vetaja_email     VARCHAR(50),             
+    kurssivastaava_email     VARCHAR(50),             
     lukujarjestys    VARCHAR(50),
     CONSTRAINT PK1 PRIMARY KEY (o_ryhmaID)
 )
