@@ -5,16 +5,18 @@
 sudo apt-get update
 sudo apt-get install -y git
 sudo apt-get install -y docker.io
+
+git clone https://github.com/TiinaMaar/Kojelauta.git
+cd Kojelauta
+git checkout sql
+cd kojelauta
+
 sudo docker build -t mariadb .
 sudo docker run -d --name mariadb mariadb
 sudo apt-get install -y python
 sudo apt install -y python-pip
 sudo apt-get install -y nano
 pip install mysql-connector
-git clone https://github.com/TiinaMaar/Kojelauta.git
-cd Kojelauta
-git checkout sql
-cd kojelauta
 python sql.py//
 """
 
