@@ -15,9 +15,12 @@ sudo docker build -t mariadb .
 sudo docker run -d --name mariadb mariadb
 sudo apt-get install -y python
 sudo apt install -y python-pip
-sudo apt-get install -y nano
+
 pip install mysql-connector
 python sql.py//
+
+jos haluat niin
+sudo apt-get install -y nano
 """
 
 import mysql.connector as mariadb
