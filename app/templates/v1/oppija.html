@@ -1,0 +1,31 @@
+<!doctype html>
+<title>{% block title%}Oppija {{ oppija['sukunimi'] }}{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<h1>Hei, oppija {{ oppija['sukunimi'] }} {{ oppija['etunimi'] }}, <br> {{ ryhma['nimi'] }} <br> </h1>
+<body>
+    <p>Tänään on {{ tanaan.strftime("%d") }}.{{ tanaan.strftime("%m") }}.{{ tanaan.strftime("%Y") }}</p>
+    <h2>Lukujärjestys</h2>
+        <object width="600" height="600" type = "application/pdf" data="../../static/Lukujärjestys TvteatTYPO4.pdf"></object>
+    <h2>Ilmoita poissaolosta</h2>
+    <form>
+        <strong>Pvm:</strong><br>
+        <input type="date" name="pvm" value="{{ tanaan.strftime("%d")}}.{{ tanaan.strftime("%m") }}."><br>
+        <br><strong>Lisätietoa:</strong><br>
+        <textarea name="poissa" rows="10" cols="50">En jäksä enää.</textarea><br>
+        <input type="submit">
+    </form>
+
+    <h2>Verkkokurssit:</h2>
+    <form method="post">
+        <table>
+            <tr><th>nimi</th><th>aloittamatta</th><th>kesken</th><th>suoritettu</th></tr>
+            {% for kurssi in verkkokurssit %}
+            <tr><td>{{ kurssi }} </td><td><input type="radio" id="vaihe0" name={{kurssi}} value=0></td>
+                <td><input type="radio" id="vaihe1" name={{kurssi}} value=1></td>
+                <td><input type="radio" id="vaihe2" name={{kurssi}} value=2></td>
+            </tr>
+            {% endfor %}
+         </table>
+         <button type="submit">Päivitä</button>
+    </form>
+</body>

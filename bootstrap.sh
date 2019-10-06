@@ -22,16 +22,14 @@ sudo pip3 install --upgrade pip
 
 sudo pip3 install flask
 
+sudo pip install mysql
+
 sudo curl -L "https://github.com/docker/compose/releases/download/1.24.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 
 sudo chmod +x /usr/local/bin/docker-compose
 
+sudo apt install mariadb-server
+
 sudo apt update
-
-wget -qO - https://www.mongodb.org/static/pgp/server-4.2.asc | sudo apt-key add -
-
-echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/4.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.2.list
-
-sudo apt-get install -y mongodb-org
 
 exit

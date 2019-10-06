@@ -14,6 +14,9 @@ echo "server {
     location / {
         try_files \$uri @app;
     }
+    location /oppija/name {
+        try_files \$uri @app;
+    }
     location @app {
         include uwsgi_params;
         uwsgi_pass unix:///tmp/uwsgi.sock;
