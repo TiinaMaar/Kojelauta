@@ -21,16 +21,18 @@
             <tr><th>nimi</th><th>aloittamatta</th><th>kesken</th><th>suoritettu</th></tr>
             {% for kurssi in verkkokurssit %}
             <tr><td>{{ kurssi }} </td>
-                {% for stat in verkko_osallistuminen %}
-                <td><input type="radio" name={{ kurssi }} value={{ loop.index0 }} 
-                    {% if stat['vaihe']|int == loop.index0|int %}
+                {% for nappi in radionapit %}
+                <td><input type="radio" name="{{ kurssi }}" id="{{ verkko_osallistuminen[verkkokurssit.index(kurssi)]['vaihe'] }}" value={{ loop.index0 }} 
+                    {% if verkko_osallistuminen[verkkokurssit.index(kurssi)]['vaihe']|int == loop.index0|int %}
                         checked="checked" 
-                        {% endif %}/>
+                    {% endif %}
+                    />
                 </td>
                 {% endfor %}
             </tr>
             {% endfor %}
          </table>
-         <button type="submit">Päivitä</button>
+         <button type="submit" onClick="window.location.reload()">Päivitä</button>
     </form>
+    <a href="/v1/oppija/02/lisaaverkkokurssi">Lisää uusi verkkokurssi</a>
 </body>

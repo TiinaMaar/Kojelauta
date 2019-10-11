@@ -253,7 +253,7 @@ def get_oppija_view_v0(id):
 @app.route('/v1/oppija/<int:id>', methods=('GET', 'POST'))
 def get_oppija_view_v1(id):
     kuunyt = kuukauded[int(kuu)-1]
-    session.clear()   
+    session.clear()
 
     oppija = get_db().execute(
         'SELECT id, etunimi, sukunimi, ryhma_id'
@@ -266,6 +266,9 @@ def get_oppija_view_v1(id):
         ' FROM ryhma'
         ' WHERE id = ?', (oppija['ryhma_id'], )
         ).fetchone()
+    
+    session['oppija_id'] = oppija['id']
+    session['ryhma_id'] = oppija['ryhma_id']
     
     verkko_osallistuminen = get_db().execute(
         'SELECT verkko_id, vaihe'
@@ -282,21 +285,43 @@ def get_oppija_view_v1(id):
         ' WHERE verkko_id = ?', (kurssi['verkko_id'], )
         ).fetchone()
         verkkokurssit.append(verkkokurssi['verkkokurssinnimi'])
-
-    checked = False
-
-    session['oppija_id'] = oppija['id']
-    session['ryhma_id'] = oppija['ryhma_id']
+        print("from db ------------>>>> " + str(kurssi['verkko_id']) + " vaihe >>>> " + str(kurssi['vaihe']))
+    
+    radionapit = range(3)
 
     if request.method == "POST":
         print(request.form)
         for i in request.form:
-            print(i, request.form[i])
+            verkkoId = get_db().execute(
+                'SELECT verkko_id'
+                ' FROM verkkokurssi'
+                ' WHERE verkkokurssinnimi = ?', (i, )
+            ).fetchone()
 
+            db = get_db()
+            db.execute(
+                'UPDATE osallistuminen'
+                ' SET vaihe = ?'
+                ' WHERE oppilas_id = ? AND verkko_id = ?', (int(request.form[i]), 
+                int(session['oppija_id']), int(verkkoId['verkko_id']))
+            )
+            db.commit()
+            # print(">>>>>>>>>>>>>INSERTED >>>>>>>> " + str(session['oppija_id']) + 
+            # str(verkkoId['verkko_id']) + request.form[i])
+  
 
     return render_template('v1/oppija.html', tanaan=tanaan, 
-    oppija=oppija, ryhma=ryhma, kuunyt=kuunyt, verkkokurssit=verkkokurssit,
-    checked=checked)
+    oppija=oppija, ryhma=ryhma, kuunyt=kuunyt,
+    verkko_osallistuminen=verkko_osallistuminen,
+    verkkokurssit=verkkokurssit, radionapit=radionapit)
+
+@app.route('/v1/oppija/<int:id>/lisaaverkkokurssi', methods=('GET', 'POST'))
+def lisaaverkkokurssi(id):
+    if request.method == "POST":
+        uuskurssi = request.form['verkkokurssi']
+        
+
+    return render_template('v1/lisaaverkkokurssi.html')
 
 if __name__ == "__main__":
     app.secret_key = 'dev'
