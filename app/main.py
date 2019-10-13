@@ -275,6 +275,7 @@ def get_oppija_view_v1(id):
         ' FROM osallistuminen'
         ' WHERE oppilas_id = ?', (id, )
         ).fetchall()
+    
 
     verkkokurssit = []
 
@@ -305,10 +306,7 @@ def get_oppija_view_v1(id):
                 ' WHERE oppilas_id = ? AND verkko_id = ?', (int(request.form[i]), 
                 int(session['oppija_id']), int(verkkoId['verkko_id']))
             )
-            db.commit()
-            # print(">>>>>>>>>>>>>INSERTED >>>>>>>> " + str(session['oppija_id']) + 
-            # str(verkkoId['verkko_id']) + request.form[i])
-  
+            db.commit()  
 
     return render_template('v1/oppija.html', tanaan=tanaan, 
     oppija=oppija, ryhma=ryhma, kuunyt=kuunyt,
@@ -317,11 +315,50 @@ def get_oppija_view_v1(id):
 
 @app.route('/v1/oppija/<int:id>/lisaaverkkokurssi', methods=('GET', 'POST'))
 def lisaaverkkokurssi(id):
-    if request.method == "POST":
-        uuskurssi = request.form['verkkokurssi']
-        
+    kotiurl = "http://127.0.0.1:5000/v1/oppija/" + str(session['oppija_id'])
+    jo = " ... "
 
-    return render_template('v1/lisaaverkkokurssi.html')
+    if request.method == "POST":
+        db = get_db()
+        vkurssi = db.execute(
+            'SELECT * FROM verkkokurssi'
+            ' WHERE verkkokurssinnimi =  ?', (request.form['verkkokurssi'], )
+        ).fetchall()
+
+        if not vkurssi:
+            db.execute(
+                'INSERT INTO verkkokurssi (verkkokurssinnimi)'
+                ' VALUES (?)', (request.form['verkkokurssi'], )
+            )
+            db.commit()
+            print(">>> inserted into db" + request.form['verkkokurssi'])
+
+            verkkoId = get_db().execute(
+                'SELECT verkko_id'
+                ' FROM verkkokurssi'
+                ' WHERE verkkokurssinnimi = ?', (request.form['verkkokurssi'], )
+            ).fetchone()
+            print(">>> id from db " + request.form['verkkokurssi'] + " " + str(verkkoId['verkko_id']))
+        
+            db.execute(
+                'INSERT INTO osallistuminen (oppilas_id, verkko_id, vaihe)'
+                ' VALUES (?, ?, ?)', (int(session['oppija_id']), verkkoId['verkko_id'], 0)
+            )
+            db.commit()
+            print(">>> INSERTED INTO osallistuminen kurssi ID " + str(verkkoId['verkko_id']) + " oppija ID " + str(int(session['oppija_id'])))
+
+        else:
+            jo = request.form['verkkokurssi'] + " kurssi on jo"
+            print(">>> " + request.form['verkkokurssi'] + " already in the database")
+
+    return render_template('v1/lisaaverkkokurssi.html', kotiurl=kotiurl, jo=jo)
+
+@app.route('/v1/admin', methods=('GET', 'POST'))
+def get_admin_view():
+    
+    herro = "Yo, admin! "
+
+    return render_template('admin.html', herro=herro)
 
 if __name__ == "__main__":
     app.secret_key = 'dev'
