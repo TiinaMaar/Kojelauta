@@ -1,0 +1,39 @@
+<html>
+    <h2>Valitse kurssi</h2>
+    <form method="post">
+            <select name=ryhma>
+        {% for ryhma in ryhmat %}
+            <option value="{{ ryhma['nimi'] }}"
+            {% if request.form['ryhma'] == ryhma['nimi'] %}
+                    selected
+                {% endif %}>
+                {{ ryhma['nimi'] }}</option>
+        {% endfor %}
+        </select>
+        <br>Etunimi:    <input type="text" name="etunimi"></br>
+        Sukunimi: <input type="text" name="sukunimi"></br>
+        <br>
+        <button type="submit">Valitse</button>
+    </form>
+
+    {% if oppijat %}
+        <strong>{{ request.form['ryhma'] }} oppilaat:</strong>
+        {% for oppija in oppijat %}
+        <p>{{ oppija['id'] }} {{ oppija['etunimi'] }} {{ oppija['sukunimi'] }}</p>
+        {%endfor%}
+    {% endif %}<br>
+
+    <!-- <strong>Lisää oppilas</strong><br><br>
+    <form method="POST">
+        Etunimi:    <input type="text" name="etunimi"></br>
+        Sukunimi: <input type="text" name="sukunimi"></br>
+        <button type="submit">Lisää</button>
+    </form> -->
+
+    <strong>Lisää lukujärjestys</strong><br><br>
+    <form method="POST">
+        <input type="file" accept=".pdf" name="luku">
+        <button type="submit">Lisää</button>
+    </form>
+
+</html>
