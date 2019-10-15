@@ -275,6 +275,9 @@ def get_oppija_view_v1(id):
     
     session['oppija_id'] = oppija['id']
     session['ryhma_id'] = oppija['ryhma_id']
+    session['sukunimi'] = oppija['sukunimi']
+
+    lisaaurl = "/v1/oppija/" + str(session['oppija_id']) + "/lisaaverkkokurssi"
     
     verkko_osallistuminen = get_db().execute(
         'SELECT verkko_id, vaihe'
@@ -317,19 +320,21 @@ def get_oppija_view_v1(id):
     return render_template('v1/oppija.html', tanaan=tanaan, 
     oppija=oppija, ryhma=ryhma, kuunyt=kuunyt,
     verkko_osallistuminen=verkko_osallistuminen,
-    verkkokurssit=verkkokurssit, radionapit=radionapit)
+    verkkokurssit=verkkokurssit, radionapit=radionapit, lisaaurl=lisaaurl)
 
 @app.route('/v1/oppija/<int:id>/lisaaverkkokurssi', methods=('GET', 'POST'))
 def lisaa_verkkokurssi(id):
-    kotiurl = "http://127.0.0.1:5000/v1/oppija/" + str(session['oppija_id'])
+    kotiurl = "/v1/oppija/" + str(session['oppija_id'])
 
     if request.method == "POST":
         db = get_db()
+        vkurssi = None
 
-        vkurssi = db.execute(
-            'SELECT * FROM verkkokurssi'
-            ' WHERE verkkokurssinnimi =  ?', (request.form['verkkokurssi'], )
-        ).fetchall()
+        if request.form['verkkokurssi']:
+            vkurssi = db.execute(
+                'SELECT * FROM verkkokurssi'
+                ' WHERE verkkokurssinnimi =  ?', (request.form['verkkokurssi'], )
+            ).fetchall()
 
         if not vkurssi:
             db.execute(
@@ -371,22 +376,18 @@ def get_admin_view():
     ryhmat = db.execute(
         'SELECT * FROM ryhma'
     ).fetchall()
-    oppijat = []
-    
-    
-    if request.method == 'POST': 
+    oppijat = []   
 
-        ryhma = request.form['ryhma']
-        print(">>> from form: " + ryhma)
+    if request.method == 'POST':
 
         ryhmaId = db.execute(
-            'SELECT id FROM ryhma'
-            ' WHERE nimi = ?', (ryhma, )
+        'SELECT id FROM ryhma'
+        ' WHERE nimi = ?', (request.form['ryhma'], )
         ).fetchone()
-        
+
         oppijat = db.execute(
-            'SELECT * FROM oppilas'
-            ' WHERE ryhma_id = ?', (ryhmaId['id'], )
+        'SELECT * FROM oppilas'
+        ' WHERE ryhma_id = ?', (ryhmaId['id'], )
         ).fetchall()
 
         if request.form['sukunimi']:

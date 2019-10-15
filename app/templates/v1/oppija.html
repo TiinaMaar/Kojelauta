@@ -13,26 +13,30 @@
         <br><strong>Lisätietoa:</strong><br>
         <textarea name="poissa" rows="10" cols="50">En jäksä enää.</textarea><br>
         <input type="submit">
-    </form>
-
+    </form><br>
+    
     <h2>Verkkokurssit:</h2>
-    <form method="post">
+    {% if verkkokurssit %}
+        <form method="post">
         <table>
             <tr><th>nimi</th><th>aloittamatta</th><th>kesken</th><th>suoritettu</th></tr>
             {% for kurssi in verkkokurssit %}
-            <tr><td>{{ kurssi }} </td>
-                {% for nappi in radionapit %}
-                <td><input type="radio" name="{{ kurssi }}" id="{{ verkko_osallistuminen[verkkokurssit.index(kurssi)]['vaihe'] }}" value={{ loop.index0 }} 
-                    {% if verkko_osallistuminen[verkkokurssit.index(kurssi)]['vaihe']|int == loop.index0|int %}
-                        checked="checked" 
-                    {% endif %}
-                    />
-                </td>
-                {% endfor %}
-            </tr>
+                <tr><td>{{ kurssi }} </td>
+                    {% for nappi in radionapit %}
+                        <td><input type="radio" name="{{ kurssi }}" id="{{ verkko_osallistuminen[verkkokurssit.index(kurssi)]['vaihe'] }}" value={{ loop.index0 }} 
+                            {% if verkko_osallistuminen[verkkokurssit.index(kurssi)]['vaihe']|int == loop.index0|int %}
+                             checked="checked" 
+                            {% endif %}
+                             />
+                        </td>
+                    {% endfor %}
+                </tr>
             {% endfor %}
-         </table>
-         <button type="submit" onClick="window.location.reload()">Päivitä</button>
-    </form>
-    <a href="/v1/oppija/02/lisaaverkkokurssi">Lisää uusi verkkokurssi</a>
+        </table>
+        <button type="submit" onClick="window.location.reload()">Päivitä</button>
+        </form>
+    {% else%}
+    <p>Verkkokursseja ei ole.</p>
+    {% endif %}
+    <a href={{ lisaaurl }}>Lisää uusi verkkokurssi</a>
 </body>

@@ -10,9 +10,9 @@
                 {% endif %}>
                 {{ ryhma['nimi'] }}</option>
         {% endfor %}
-        </select>
-        <br><strong>Lisää oppilas</strong><br><br>
-        <br>Etunimi:    <input type="text" name="etunimi"></br>
+        </select><br>
+        <br><strong>Lisää oppilas</strong><br>
+        Etunimi:    <input type="text" name="etunimi"></br>
         Sukunimi: <input type="text" name="sukunimi"></br>
         <br>
         <button type="submit">Valitse</button>
@@ -24,13 +24,6 @@
         <p>{{ oppija['id'] }} {{ oppija['etunimi'] }} {{ oppija['sukunimi'] }}</p>
         {%endfor%}
     {% endif %}<br>
-
-    <!-- <strong>Lisää oppilas</strong><br><br>
-    <form method="POST">
-        Etunimi:    <input type="text" name="etunimi"></br>
-        Sukunimi: <input type="text" name="sukunimi"></br>
-        <button type="submit">Lisää</button>
-    </form> -->
 
     <strong>Lisää lukujärjestys</strong><br><br>
     <form method="POST">
