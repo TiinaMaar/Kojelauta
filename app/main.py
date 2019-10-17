@@ -4,6 +4,7 @@ from flask import (
     Flask, Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
 from db import init_db, get_db
+from werkzeug.utils import secure_filename
 import calendar, datetime
 import random
 
@@ -11,6 +12,9 @@ app = Flask(__name__)
 app.config.from_mapping(
         SECRET_KEY='dev',
         DATABASE=os.path.join(app.instance_path, 'app.sqlite'),
+        MAX_CONTENT_LENGTH = 1 * 1024 * 1024,
+        UPLOAD_FOLDER = 'static/media',
+        ALLOWED_EXTENSIONS = set(['pdf'])
     )
 
 tanaan = datetime.datetime.now()
@@ -278,6 +282,7 @@ def get_oppija_view_v1(id):
     session['sukunimi'] = oppija['sukunimi']
 
     lisaaurl = "/v1/oppija/" + str(session['oppija_id']) + "/lisaaverkkokurssi"
+    lukupolku = "../../static/media/" + ryhma['nimi']
     
     verkko_osallistuminen = get_db().execute(
         'SELECT verkko_id, vaihe'
@@ -320,7 +325,7 @@ def get_oppija_view_v1(id):
     return render_template('v1/oppija.html', tanaan=tanaan, 
     oppija=oppija, ryhma=ryhma, kuunyt=kuunyt,
     verkko_osallistuminen=verkko_osallistuminen,
-    verkkokurssit=verkkokurssit, radionapit=radionapit, lisaaurl=lisaaurl)
+    verkkokurssit=verkkokurssit, radionapit=radionapit, lisaaurl=lisaaurl, lukupolku=lukupolku)
 
 @app.route('/v1/oppija/<int:id>/lisaaverkkokurssi', methods=('GET', 'POST'))
 def lisaa_verkkokurssi(id):
@@ -376,30 +381,54 @@ def get_admin_view():
     ryhmat = db.execute(
         'SELECT * FROM ryhma'
     ).fetchall()
+
     oppijat = []   
 
     if request.method == 'POST':
+        print(request.files)
+        print(request.form)
+        if request.form:
+            try:
+                if request.form['ryhma']:
+                    ryhmaId = db.execute(
+                    'SELECT id FROM ryhma'
+                    ' WHERE nimi = ?', (request.form['ryhma'], )
+                    ).fetchone()
 
-        ryhmaId = db.execute(
-        'SELECT id FROM ryhma'
-        ' WHERE nimi = ?', (request.form['ryhma'], )
-        ).fetchone()
+                    oppijat = db.execute(
+                    'SELECT * FROM oppilas'
+                    ' WHERE ryhma_id = ?', (ryhmaId['id'], )
+                    ).fetchall()
 
-        oppijat = db.execute(
-        'SELECT * FROM oppilas'
-        ' WHERE ryhma_id = ?', (ryhmaId['id'], )
-        ).fetchall()
-
-        if request.form['sukunimi']:
-            db.execute(
-                'INSERT INTO oppilas (etunimi, sukunimi, ryhma_id)'
-                ' VALUES (?, ?, ?)', (request.form['etunimi'], request.form['sukunimi'], ryhmaId['id'])
-            )
-            db.commit()
+                if request.form['sukunimi']:
+                    db.execute(
+                        'INSERT INTO oppilas (etunimi, sukunimi, ryhma_id)'
+                        ' VALUES (?, ?, ?)', (request.form['etunimi'], request.form['sukunimi'], ryhmaId['id'])
+                    )
+                    db.commit()
+            except:
+                print(">>> request.form tyhjä")
+        
+        if request.files:
+            print(">>> tiedosto käsitellään")
+            if 'luku' not in request.files:
+                print(">>> ei tiedostoa ")
+            
+            tiedosto = request.files['luku']
+            
+            if tiedosto.filename == '':
+                print(">>> tiedosto ei valittu")
+            
+            if tiedosto:
+                tiedostonnimi = secure_filename(tiedosto.filename)
+                tiedosto.save(os.path.join(app.config['UPLOAD_FOLDER'], tiedostonnimi))
+                print(">>> tiedosto ladattu " + tiedostonnimi)
+    
+    else:
+        redirect('v1/admin')
 
     return render_template('/v1/admin.html', ryhmat=ryhmat, oppijat=oppijat)
 
 if __name__ == "__main__":
-    app.secret_key = 'dev'
     app.debug = True
     app.run()
