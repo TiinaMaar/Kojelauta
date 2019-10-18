@@ -1,0 +1,3 @@
+Xvfb :99 pitäisi olla jollain terminaalilla auki
+testi ip voi vaihtua - tsekattava koska githubista tulee testikamat
+
