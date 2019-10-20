@@ -168,7 +168,7 @@ def get_oppija_view_v1(id):
     if ryhma['vastaava']:
         session['vastaava'] = ryhma['vastaava']
     else:
-        print(">>> ryhmällä " + ryhma['id'] + " ei ole vastaavaa")
+        print(">>> ryhmällä " + str(ryhma['id']) + " ei ole vastaavaa")
     
     verkko_osallistuminen = get_db().execute(
         'SELECT verkko_id, vaihe'
