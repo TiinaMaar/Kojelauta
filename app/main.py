@@ -24,7 +24,6 @@ kuu = tanaan.strftime("%m")
 
 kuukauded = ["Tammikuulle", "Helmikuulle", "Maalliskuulle", "Huhtikuulle", "Toukokuulle", "Kesäkuulle", "Heinäkuulle", "Elokuulle", "Syyskuulle", "Lokakuulle", "Marraskuulle", "Joulukuulle"]
 kurssit = ["Docker", "Jenkins", "Vagrant", "Python", "DevOps", "LEAN IT"]
-verkkokurssit = ["Git", "Linux", "RESTful APIs", "Python"]
 viikkopaivat = ["Maanantai", "Tiistai", "Keskiviikko", "Torstai", "Perjantai", "Lauantai", "Sunnuntai"]
 etunimet = ["Anu", "Gleb", "Tiina", "Kimmo", "Tapio", "Lari"]
 sukunimet = ["Sauko", "Tishchenko", "Maaranen", "Mikonranta", "Hietanen", "Kunnas"]
@@ -79,134 +78,10 @@ def db_populate_lahipaivat():
                     db.commit()
             i = i + 1
 
-def db_populate_verkkokurssit():
-    db = get_db()
-
-    for i in range(len(verkkokurssit)):
-        db.execute(
-        'INSERT INTO verkkokurssi (verkkokurssinnimi)'
-        ' VALUES (?)', (verkkokurssit[i], )
-        )
-        i = i + 1
-        db.commit()
-
-def db_populate_osallistuminen():
-    db = get_db()
-
-    db.execute(
-    'INSERT INTO osallistuminen (oppilas_id, verkko_id, vaihe)'
-    ' VALUES (?, ?, ?)', (1, 1, 0)
-    )
-    db.commit()
-
-    db.execute(
-    'INSERT INTO osallistuminen (oppilas_id, verkko_id, vaihe)'
-    ' VALUES (?, ?, ?)', (1, 2, 0)
-    )
-    db.commit()
-
-    db.execute(
-    'INSERT INTO osallistuminen (oppilas_id, verkko_id, vaihe)'
-    ' VALUES (?, ?, ?)', (1, 3, 0)
-    )
-    db.commit()
-
-    db.execute(
-    'INSERT INTO osallistuminen (oppilas_id, verkko_id, vaihe)'
-    ' VALUES (?, ?, ?)', (2, 4, 0)
-    )
-    db.commit()
-
-    db.execute(
-    'INSERT INTO osallistuminen (oppilas_id, verkko_id, vaihe)'
-    ' VALUES (?, ?, ?)', (2, 3, 0)
-    )
-    db.commit()
-
-    db.execute(
-    'INSERT INTO osallistuminen (oppilas_id, verkko_id, vaihe)'
-    ' VALUES (?, ?, ?)', (2, 2, 0)
-    )
-    db.commit()
-
-    db.execute(
-    'INSERT INTO osallistuminen (oppilas_id, verkko_id, vaihe)'
-    ' VALUES (?, ?, ?)', (3, 2, 0)
-    )
-    db.commit()
-
-    db.execute(
-    'INSERT INTO osallistuminen (oppilas_id, verkko_id, vaihe)'
-    ' VALUES (?, ?, ?)', (3, 1, 0)
-    )
-    db.commit()
-
-    db.execute(
-    'INSERT INTO osallistuminen (oppilas_id, verkko_id, vaihe)'
-    ' VALUES (?, ?, ?)', (3, 4, 0)
-    )
-    db.commit()
-
-    db.execute(
-    'INSERT INTO osallistuminen (oppilas_id, verkko_id, vaihe)'
-    ' VALUES (?, ?, ?)', (4, 1, 0)
-    )
-    db.commit()
-
-    db.execute(
-    'INSERT INTO osallistuminen (oppilas_id, verkko_id, vaihe)'
-    ' VALUES (?, ?, ?)', (4, 3, 0)
-    )
-    db.commit()
-
-    db.execute(
-    'INSERT INTO osallistuminen (oppilas_id, verkko_id, vaihe)'
-    ' VALUES (?, ?, ?)', (4, 4, 0)
-    )
-    db.commit()
-
-    db.execute(
-    'INSERT INTO osallistuminen (oppilas_id, verkko_id, vaihe)'
-    ' VALUES (?, ?, ?)', (5, 3, 0)
-    )
-    db.commit()
-
-    db.execute(
-    'INSERT INTO osallistuminen (oppilas_id, verkko_id, vaihe)'
-    ' VALUES (?, ?, ?)', (5, 2, 0)
-    )
-    db.commit()
-
-    db.execute(
-    'INSERT INTO osallistuminen (oppilas_id, verkko_id, vaihe)'
-    ' VALUES (?, ?, ?)', (5, 1, 0)
-    )
-    db.commit()
-
-    db.execute(
-    'INSERT INTO osallistuminen (oppilas_id, verkko_id, vaihe)'
-    ' VALUES (?, ?, ?)', (6, 4, 0)
-    )
-    db.commit()
-
-    db.execute(
-    'INSERT INTO osallistuminen (oppilas_id, verkko_id, vaihe)'
-    ' VALUES (?, ?, ?)', (6, 1, 0)
-    )
-    db.commit()
-
-    db.execute(
-    'INSERT INTO osallistuminen (oppilas_id, verkko_id, vaihe)'
-    ' VALUES (?, ?, ?)', (6, 5, 0)
-    )
-    db.commit()
-
 def initialize():
         init_db()
         db_populate_oppijat()
         db_populate_lahipaivat()
-        db_populate_verkkokurssit()
-        db_populate_osallistuminen()
 
 
 @app.route('/v0/oppija/<int:id>', methods=('GET', 'POST'))
@@ -272,7 +147,7 @@ def get_oppija_view_v1(id):
     ).fetchone()
 
     ryhma = get_db().execute(
-        'SELECT id, nimi'
+        'SELECT id, nimi, lukujarjestys, vastaava'
         ' FROM ryhma'
         ' WHERE id = ?', (oppija['ryhma_id'], )
         ).fetchone()
@@ -280,9 +155,20 @@ def get_oppija_view_v1(id):
     session['oppija_id'] = oppija['id']
     session['ryhma_id'] = oppija['ryhma_id']
     session['sukunimi'] = oppija['sukunimi']
+    session['lukujarjestys'] = ryhma['lukujarjestys']
 
     lisaaurl = "/v1/oppija/" + str(session['oppija_id']) + "/lisaaverkkokurssi"
-    lukupolku = "../../static/media/" + ryhma['nimi']
+
+    if session['lukujarjestys']:
+        lukupolku = "../../" + session['lukujarjestys']
+    else:
+        lukupolku = None
+        print(">>> ei lukujärjestystä")
+
+    if ryhma['vastaava']:
+        session['vastaava'] = ryhma['vastaava']
+    else:
+        print(">>> ryhmällä " + ryhma['id'] + " ei ole vastaavaa")
     
     verkko_osallistuminen = get_db().execute(
         'SELECT verkko_id, vaihe'
@@ -382,32 +268,74 @@ def get_admin_view():
         'SELECT * FROM ryhma'
     ).fetchall()
 
-    oppijat = []   
+    oppijat = []
 
     if request.method == 'POST':
         print(request.files)
         print(request.form)
         if request.form:
-            try:
-                if request.form['ryhma']:
-                    ryhmaId = db.execute(
-                    'SELECT id FROM ryhma'
-                    ' WHERE nimi = ?', (request.form['ryhma'], )
+            if 'uusiryhma' in request.form:
+                if request.form['uusiryhma']:
+                    nimi = request.form['uusiryhma'].rstrip()
+                    check = db.execute(
+                        'SELECT nimi FROM ryhma'
+                        ' WHERE nimi = ?', (nimi, )
                     ).fetchone()
+                    db.commit()
 
-                    oppijat = db.execute(
-                    'SELECT * FROM oppilas'
-                    ' WHERE ryhma_id = ?', (ryhmaId['id'], )
-                    ).fetchall()
+                    if check:
+                        print(">>> ryhma " + check['nimi'] + "on jo kannassa ")
+                    else:
+                        db.execute(
+                            'INSERT INTO ryhma (nimi)'
+                            ' VALUES (?)', (request.form['uusiryhma'], )
+                        )
+                        db.commit()
+                        print(">>> uusi ryhma " + request.form['uusiryhma'] + " lisätty kantaan")
+                else:
+                    print(">>> uusi ryhma tyhjä")
 
+            if 'ryhma' in request.form:
+                ryhma = db.execute(
+                'SELECT id, nimi FROM ryhma'
+                ' WHERE nimi = ?', (request.form['ryhma'], )
+                ).fetchone()
+
+                session['ryhma_id'] = ryhma['id']
+                session['ryhma_nimi'] = ryhma['nimi']
+                print(">>> session ryhmä id: " + str(session['ryhma_id']) + " nimi:" + session['ryhma_nimi'])
+
+                oppijat = db.execute(
+                'SELECT * FROM oppilas'
+                ' WHERE ryhma_id = ?', (session['ryhma_id'], )
+                ).fetchall()
+
+            else:
+                print(">>> ryhmä tyhjä")
+            
+            if 'sukunimi' in request.form:
                 if request.form['sukunimi']:
                     db.execute(
                         'INSERT INTO oppilas (etunimi, sukunimi, ryhma_id)'
-                        ' VALUES (?, ?, ?)', (request.form['etunimi'], request.form['sukunimi'], ryhmaId['id'])
+                        ' VALUES (?, ?, ?)', (request.form['etunimi'], request.form['sukunimi'], session['ryhma_id'])
                     )
                     db.commit()
-            except:
-                print(">>> request.form tyhjä")
+                    print(">>> oppija " + request.form['sukunimi'] + " lisätty ryhmään " + str(session['ryhma_id']))
+                else:
+                    print(">>> sukunimi tyhjä")
+            
+            if 'vastaavaemail' in request.form:
+                if request.form['vastaavaemail']:
+                    mail = request.form['vastaavaemail'].rstrip()
+                    db.execute(
+                    'UPDATE ryhma'
+                    ' SET vastaava = ?'
+                    ' WHERE id = ?', (mail, session['ryhma_id'])
+                    )
+                    db.commit()  
+                    print(">>> " + mail + " lisätty ryhmään " + str(session['ryhma_id']))
+                else:
+                    print(">>> vastaavan email on tyhjä")
         
         if request.files:
             print(">>> tiedosto käsitellään")
@@ -422,7 +350,15 @@ def get_admin_view():
             if tiedosto:
                 tiedostonnimi = secure_filename(tiedosto.filename)
                 tiedosto.save(os.path.join(app.config['UPLOAD_FOLDER'], tiedostonnimi))
-                print(">>> tiedosto ladattu " + tiedostonnimi)
+                db.execute(
+                    'UPDATE ryhma'
+                    ' SET lukujarjestys = ?'
+                    ' WHERE id = ?', (os.path.join(app.config['UPLOAD_FOLDER'], tiedostonnimi),
+                    session['ryhma_id'])
+                )
+                db.commit()
+                print(">>> tiedosto ladattu " + tiedostonnimi + " ryhmä nro. " + str(session['ryhma_id']))
+                print(">>> polku tiedostoon lisätty kantaan " + os.path.join(app.config['UPLOAD_FOLDER'], tiedostonnimi))
     
     else:
         redirect('v1/admin')

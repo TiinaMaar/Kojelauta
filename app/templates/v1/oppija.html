@@ -1,25 +1,41 @@
 <!doctype html>
+
 <title>{% block title%}Oppija {{ oppija['sukunimi'] }}{% endblock %}</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
 <h1>Hei, oppija {{ oppija['sukunimi'] }} {{ oppija['etunimi'] }}, <br> {{ ryhma['nimi'] }} <br> </h1>
+
 <body>
     <p>Tänään on {{ tanaan.strftime("%d") }}.{{ tanaan.strftime("%m") }}.{{ tanaan.strftime("%Y") }}</p>
     <h2>Lukujärjestys</h2>
-        <object width="600" height="600" type = "application/pdf" data="../../static/media/Lukujärjestys TvteatTYPO4.pdf"></object>
-    <h2>Ilmoita poissaolosta</h2>
-    <form>
+        {% if lukupolku %}
+            <object width="600" height="600" type = "application/pdf" data={{ lukupolku }}></object>
+        {% else %}
+            <p>Ei ole voimassa olevaa lukujärjestystä.</p>
+        {% endif %}
+
+    <!-- <h2>Ilmoita poissaolosta</h2> -->
+    <!-- <form>
         <strong>Pvm:</strong><br>
         <input type="date" name="pvm" value="{{ tanaan.strftime("%d")}}.{{ tanaan.strftime("%m") }}."><br>
         <br><strong>Lisätietoa:</strong><br>
         <textarea name="poissa" rows="10" cols="50">En jäksä enää.</textarea><br>
         <input type="submit">
-    </form><br>
+    </form><br> -->
+
+    <br>
+    
+    <br><a href="mailto:{{ session['vastaava'] }}?subject=En%20pysty&body=En%20j%C3%A4ks%C3%A4%20en%C3%A4%C3%A4">Ilmoita poissaolosta</a>
+
+    <br>
     
     <h2>Verkkokurssit:</h2>
+
     {% if verkkokurssit %}
         <form method="post">
         <table>
             <tr><th>nimi</th><th>aloittamatta</th><th>kesken</th><th>suoritettu</th></tr>
+
             {% for kurssi in verkkokurssit %}
                 <tr><td>{{ kurssi }} </td>
                     {% for nappi in radionapit %}
@@ -32,11 +48,15 @@
                     {% endfor %}
                 </tr>
             {% endfor %}
+
         </table>
         <button type="submit" onClick="window.location.reload()">Päivitä</button>
         </form>
-    {% else%}
+
+    {% else %}
     <p>Verkkokursseja ei ole.</p>
     {% endif %}
+
     <a href={{ lisaaurl }}>Lisää uusi verkkokurssi</a>
+
 </body>

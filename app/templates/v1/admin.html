@@ -1,34 +1,67 @@
 <html>
     <title>Admin</title>
+    
+    <h2>Lisää uusi kurssi</h2>
+    <form method="post">
+        Kurssin nimi: <input type="text" name="uusiryhma">
+        <button type="submit">Lisää kurssi</button>
+    </form><br>
+
     <h2>Valitse kurssi</h2>
     <form method="post">
-            <select name=ryhma>
-        {% for ryhma in ryhmat %}
-            <option value="{{ ryhma['nimi'] }}"
-            {% if request.form['ryhma'] == ryhma['nimi'] %}
-                    selected
+        <select name=ryhma>
+
+            {% for ryhma in ryhmat %}
+                <option value="{{ ryhma['nimi'] }}"
+                {% if request.form['ryhma'] == ryhma['nimi'] %}
+                        selected
                 {% endif %}>
                 {{ ryhma['nimi'] }}</option>
-        {% endfor %}
-        </select><br>
-        <br><strong>Lisää oppilas</strong><br>
-        Etunimi:    <input type="text" name="etunimi"></br>
-        Sukunimi: <input type="text" name="sukunimi"></br>
-        <br>
-        <button type="submit">Valitse</button>
+            {% endfor %}
+
+        </select>
+        <button type="submit">Valitse kurssi</button>
     </form>
 
-    {% if oppijat %}
+    {% if request.form['ryhma'] %}
         <strong>{{ request.form['ryhma'] }} oppilaat:</strong>
-        {% for oppija in oppijat %}
-        <p>{{ oppija['id'] }} {{ oppija['etunimi'] }} {{ oppija['sukunimi'] }}</p>
-        {%endfor%}
-    {% endif %}<br>
 
-    <strong>Lisää lukujärjestys</strong><br><br>
-    <form method="post" enctype="multipart/form-data">
-        <input type="file" accept=".pdf" name="luku">
-        <button type="submit">Lisää</button>
-    </form>
+        {% if oppijat %}
+            {% for oppija in oppijat %}
+            <p>{{ oppija['id'] }} {{ oppija['etunimi'] }} {{ oppija['sukunimi'] }}</p>
+            {%endfor%}
+        {% endif %}
+
+        <br><strong>Lisää oppilas</strong><br>
+        
+        <br>
+
+        <form method="post">
+            Etunimi:  <input type="text" name="etunimi"></br>
+            Sukunimi: <input type="text" name="sukunimi"></br>
+            <button type="submit">Lisää oppilas</button>
+        </form><br>
+
+        <br><strong>Lisää kurssivastaavan sähköpostiosoite</strong><br>
+        
+        <br>
+
+        <form method="post">
+            Säköpostiosoite: <input type="text" name="vastaavaemail"></br>
+            <button type="submit">Lisää sähköposti</button>
+        </form><br>
+
+        <br><strong>Lisää lukujärjestys</strong><br>
+        
+        <br>
+
+        <form method="post" enctype="multipart/form-data">
+            <input type="file" accept=".pdf" name="luku">
+            <button type="submit">Lisää lukujärjestys</button>
+        </form>
+        
+    {% else %}
+        <p>valitse kurssi</p>
+    {% endif %}
 
 </html>
