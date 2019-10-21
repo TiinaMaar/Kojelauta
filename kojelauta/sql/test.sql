@@ -37,20 +37,6 @@ CREATE TABLE Oppilaat(
 ;
 
 
-
--- 
--- TABLE: Osallistuminen 
---
-
-CREATE TABLE Osallistuminen(
-    oppilasID    INT NOT NULL,
-    VerkkoID     INT NOT NULL,
-    CONSTRAINT PK5 PRIMARY KEY (oppilasID, VerkkoID)
-)
-;
-
-
-
 -- 
 -- TABLE: Poissaolo 
 --
@@ -71,9 +57,10 @@ CREATE TABLE Poissaolo(
 
 CREATE TABLE Verkkokurssit(
     VerkkoID             INT NOT NULL,
+    oppilasID    INT NOT NULL,    
     verkkokurssinnimi    VARCHAR(50),
     status               INT,
-    CONSTRAINT PK3 PRIMARY KEY (VerkkoID)
+    CONSTRAINT PK3 PRIMARY KEY (VerkkoID, oppilasID)
 )
 ;
 
@@ -88,22 +75,6 @@ ALTER TABLE Oppilaat ADD CONSTRAINT RefO_ryhma12
     REFERENCES O_ryhma(o_ryhmaID)
 ;
 
-
--- 
--- TABLE: Osallistuminen 
---
-
-ALTER TABLE Osallistuminen ADD CONSTRAINT RefOppilaat4 
-    FOREIGN KEY (oppilasID)
-    REFERENCES Oppilaat(oppilasID)
-;
-
-ALTER TABLE Osallistuminen ADD CONSTRAINT RefVerkkokurssit5 
-    FOREIGN KEY (VerkkoID)
-    REFERENCES Verkkokurssit(VerkkoID)
-;
-
-
 -- 
 -- TABLE: Poissaolo 
 --
@@ -115,7 +86,7 @@ ALTER TABLE Poissaolo ADD CONSTRAINT RefOppilaat10
 
 
 insert into O_ryhma values (1, 'eliitti', 'no@example.com', NULL);
-insert into O_ryhma values (2, 'pohjasakka', 'no@example.com', NULL);
+insert into O_ryhma values (2, 'keskiverrot', 'no@example.com', NULL);
 insert into O_ryhma values (3, 'te-keskuksen ryhma', 'no@example.com', NULL);
 insert into Oppilaat values (1, 'Tiina', 'M', 1);
 insert into Oppilaat values (2, 'Gleb', 'T', 1);
