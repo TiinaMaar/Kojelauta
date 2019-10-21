@@ -7,7 +7,7 @@ Documentation     A resource file with reusable keywords and variables.
 Library           SeleniumLibrary
 
 *** Variables ***
-${SERVER}         35.228.193.93
+${SERVER}         35.228.125.45
 ${BROWSER}        Firefox
 ${DELAY}          0
 ${USER URL}      http://${SERVER}/v1/oppija/1
