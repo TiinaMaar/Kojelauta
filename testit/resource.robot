@@ -44,3 +44,7 @@ Input Password
 
 Submit Credentials
     Click Button    login_button
+
+Add Schedule
+    Click Element xpath=//div[@id='Valitse kurssi']
+    Choose File xpath=.//div/input  ${TEMPDIR}${/}lukkari.pdf
