@@ -14,18 +14,18 @@
             <p>Ei ole voimassa olevaa lukujärjestystä.</p>
         {% endif %}
 
-    <!-- <h2>Ilmoita poissaolosta</h2> -->
-    <!-- <form>
+    <h2>Ilmoita poissaolosta</h2>
+    <form>
         <strong>Pvm:</strong><br>
         <input type="date" name="pvm" value="{{ tanaan.strftime("%d")}}.{{ tanaan.strftime("%m") }}."><br>
         <br><strong>Lisätietoa:</strong><br>
         <textarea name="poissa" rows="10" cols="50">En jäksä enää.</textarea><br>
         <input type="submit">
-    </form><br> -->
+    </form><br>
 
     <br>
     
-    <br><a href="mailto:{{ session['vastaava'] }}?subject=En%20pysty&body=En%20j%C3%A4ks%C3%A4%20en%C3%A4%C3%A4">Ilmoita poissaolosta</a>
+    <br><a href="mailto:{{ session['vastaava'] }}?subject=En%20pysty&body=En%20j%C3%A4ks%C3%A4%20en%C3%A4%C3%A4">Ilmoita poissaolosta kurssinvastaavalle sähköpostitse</a>
 
     <br>
     
