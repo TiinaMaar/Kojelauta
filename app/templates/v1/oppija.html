@@ -3,14 +3,14 @@
 <title>{% block title%}Oppija {{ oppija['sukunimi'] }}{% endblock %}</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
-<h2>Hei, oppija {{ oppija['sukunimi'] }} {{ oppija['etunimi'] }}, <br> {{ ryhma['nimi'] }} <br> </h2>
+<h2>Hei, oppija {{ oppija['sukunimi'] }} {{ oppija['etunimi'] }}, <br> {{ ryhma['nimi'] }} </h2>
     <div class="inline-flex-parent">
     <body>
         <div class="inline">
         <p>Tänään on {{ tanaan.strftime("%d") }}.{{ tanaan.strftime("%m") }}.{{ tanaan.strftime("%Y") }}</p>
             <h2>Lukujärjestys</h2>
                 {% if lukupolku %}
-                    <object width="600" height="600" type = "application/pdf" data={{ lukupolku }}></object>
+                    <object width="600" height="550" type = "application/pdf" data={{ lukupolku }}></object>
                 {% else %}
                     <p>Ei ole voimassa olevaa lukujärjestystä.</p>
                 {% endif %}
