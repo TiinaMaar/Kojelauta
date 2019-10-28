@@ -19,5 +19,6 @@ Valid Enter Admin
 Alter Schedule
     Open Browser To Admin Page
     Admin Page Should Be Open
-    Add Schedule
     [Teardown]    Close Browser
+    
+
